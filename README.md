@@ -1,34 +1,18 @@
 # contract-wt
 
-The second opinion. A Python WebTransport client and server, used to test the Godot H3/WT implementation in `entities-godot` by swapping roles.
+A Python WebTransport client that tests the engine's HTTP/3 WebTransport server from an independent implementation.
 
-## Why it is not in the engine
+## What it is for
 
-A Godot client talking to a Godot server agrees with itself. Any assumption both ends get wrong — a frame the spec does not have, a close message never sent, a session id read from the wrong place — passes every test the pair can run and then fails against a browser. So one end has to be an implementation written from the specification rather than from the other end, and that is what aioquic is here.
+A Godot client talking to a Godot server agrees with itself about anything both ends get wrong. This client is written from the specification instead, and holds several sessions open at once to exercise the server's roster of connected peers. [RFD 2123](https://github.com/V-Sekai-fire/manuals-weftspun/blob/main/rfd/2123-a-second-webtransport-implementation.exs) owns the design.
 
-Keeping it out of the engine fork is the same argument one level up. Vendored into `modules/http3/demo`, this would be versioned with the engine and rebased through every assembly, and the one thing it must not do is move when the engine moves.
+## Run
 
-## The two roles
+    pip install -r requirements.txt
+    python roster_client.py --help
 
-```sh
-# Godot serves, Python connects.
-godot --headless --script modules/http3/demo/wt_server_demo.gd    # in entities-godot
-python roster_client.py --port 54370 --clients 2
+Point it at the WebTransport server demo in `entities-godot`.
 
-# Python serves, Godot connects.        (not written yet — see below)
-python echo_server.py --port 54370
-godot --headless --script modules/http3/demo/wt_client_test.gd
-```
+## Licence
 
-## What `roster_client.py` is for
-
-The part a single connection cannot show. `WebTransportPeer` tracked its clients in one bool until August 2026, so everything worked with one client and the second was invisible: `peer_connected` was never emitted at all, and `disconnect_peer` closed the whole server. None of that is reachable with one session in the room, which is why it survived so long. So this opens several, staggered, and holds them open: two sessions live at once with distinguishable joins, the server dropping one reaching only that client, and the other still connected afterwards.
-
-## Certificates
-
-`roster_client.py:93` sets `ssl.CERT_NONE`. The Godot demo server builds a fresh self-signed P-256 certificate on every run, so there is no chain to check and no stable hash to pin — pinning one would mean editing this file every time the server restarted. It talks to localhost, on a port it was told, for a test. A deployment is a different question and is not this repository's.
-
-## Not written yet
-
-- `echo_server.py`, the Python end of the other role. `wt_client_test.gd` currently expects an external `webtransportd`, so the Godot-as-client direction depends on a binary not in the workspace.
-- Unreliable-ordered. H3/WT has exactly two modes — reliable-sequenced on streams and unreliable-unsequenced on datagrams — so a third is the endpoint's to build, and nothing here yet would catch it being claimed and not delivered.
+MIT. See [LICENSE](LICENSE).
