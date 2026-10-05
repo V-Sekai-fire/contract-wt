@@ -1,9 +1,9 @@
 # contract-wt
 
-A Python WebTransport client and server that test the Godot H3/WT implementation in
-`entities-godot` by swapping roles.
+A Python WebTransport client that tests the Godot H3/WT implementation in `entities-godot`
+from an independent implementation.
 
-`README.md` gives the design. `CITATION.cff` says what this is built on; add a reference there
+RFD 2123 owns the design. `CITATION.cff` says what this is built on; add a reference there
 when you add a dependency here.
 
 ## It must not become the Godot implementation's twin
