@@ -11,7 +11,7 @@ A Godot client talking to a Godot server agrees with itself about anything both 
     pip install -r requirements.txt
     python roster_client.py --help
 
-Point it at the WebTransport server demo in `entities-godot`.
+Point it at the WebTransport server demo, `modules/http3/demo/wt_server_demo.gd` in `entities-godot`.
 
 ## Licence
 
