@@ -3,7 +3,7 @@
 A Python WebTransport client that tests the Godot H3/WT implementation in `entities-godot`
 from an independent implementation.
 
-RFD 2123 owns the design. `CITATION.cff` says what this is built on; add a reference there
+RFD66606-2123 owns the design. `CITATION.cff` says what this is built on; add a reference there
 when you add a dependency here.
 
 ## It must not become the Godot implementation's twin
